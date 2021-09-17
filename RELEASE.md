@@ -50,6 +50,7 @@ Make sure snapcraft packaging works. In `snap/snapcraft.yaml`:
 - [ ] The `tor`, `libevent`, and `obfs4` parts should be updated if necessary
 - [ ] All python packages should be updated to match `cli/pyproject.toml` and `desktop/pyproject.toml`
 - [ ] Test the snap package, ensure it works
+- [ ] Change `grade: devel` to `grade: stable`
 
 Finally:
 
@@ -90,12 +91,7 @@ Run the OnionShare snap locally:
 /snap/bin/onionshare.cli # CLI version
 ```
 
-Upload the to Snapcraft:
-
-```sh
-snapcraft login
-snapcraft upload --release=stable onionshare_$VERSION_amd64.snap
-```
+Login to snapcraft.io, wait for the CI builds to finish, and then in the Releases tab promote the release to stable.
 
 ## Linux AppImage release
 

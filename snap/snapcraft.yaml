@@ -44,7 +44,6 @@ parts:
     python-version: python3
     python-packages:
       - psutil
-      - pyside2 == 5.15.2
       - qrcode
     stage-packages:
       - libasound2
@@ -108,7 +107,7 @@ parts:
       - libxslt1.1
       - libxtst6
       - qtwayland5
-    after: [onionshare-cli]
+    after: [onionshare-cli, pyside2]
 
   onionshare-cli:
     source: ./cli
@@ -138,6 +137,39 @@ parts:
       - -usr/lib/x86_64-linux-gnu/libcrypto.so.1.1
       - -usr/share/doc/libssl1.1/changelog.Debian.gz
     after: [tor, obfs4]
+
+  qt5:
+    source: git://code.qt.io/qt/qt5.git
+    source-type: git
+    source-tag: v5.15.2
+    plugin: autotools
+    build-packages:
+      - python3
+      - libwayland-dev
+      - libwayland-egl1
+      - libgl1-mesa-dev 
+      - libglu1-mesa-dev 
+    override-build: |
+      perl init-repository -f
+      mkdir build
+      cd build
+      ../configure -opensource -confirm-license -nomake examples -nomake tests -skip qt3d -skip qtactiveqt -skip qtandroidextras -skip qtcanvas3d -skip qtcharts -skip qtconnectivity -skip qtdatavis3d -skip qtdoc -skip qtdocgallery -skip qtfeedback -skip qtgamepad -skip qtlocation -skip qtlottie -skip qtpurchasing -skip qtquick3d -skip qtquickcontrols -skip qtquickcontrols2 -skip qtquicktimeline -skip qtremoteobjects -skip qtspeech -skip qtwebengine -skip qtwebglplugin -skip qtwebview
+      make -j$(nproc)
+      make install
+
+  pyside2:
+    source: https://code.qt.io/pyside/pyside-setup.git
+    source-type: git
+    source-tag: "5.15.2"
+    build-packages:
+      - cmake
+    plugin: python
+    python-version: python3
+    python-packages:
+      - packaging
+      - setuptools
+      - wheel
+    after: [qt5]
 
   tor:
     source: https://dist.torproject.org/tor-0.4.6.7.tar.gz
